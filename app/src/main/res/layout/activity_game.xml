@@ -35,7 +35,7 @@
         app:layout_constraintVertical_bias="0.107" />
 
     <Button
-        android:id="@+id/greaterBtn"
+        android:id="@+id/isGreaterBtn"
         android:layout_width="114dp"
         android:layout_height="49dp"
         android:text="Greater"
@@ -47,7 +47,7 @@
         app:layout_constraintVertical_bias="0.565" />
 
     <Button
-        android:id="@+id/equalBtn"
+        android:id="@+id/isEqualBtn"
         android:layout_width="114dp"
         android:layout_height="49dp"
         android:text="=="
@@ -60,7 +60,7 @@
         app:layout_constraintVertical_bias="0.686" />
 
     <Button
-        android:id="@+id/lesserBtn"
+        android:id="@+id/isLesserBtn"
         android:layout_width="114dp"
         android:layout_height="49dp"
         android:text="Lesser"
@@ -70,4 +70,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.565" />
+
+    <TextView
+        android:id="@+id/showResultView"
+        android:layout_width="195dp"
+        android:layout_height="73dp"
+        android:text="Show Result"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.897" />
 </androidx.constraintlayout.widget.ConstraintLayout>

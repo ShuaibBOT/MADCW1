@@ -3,11 +3,16 @@ package com.example.madcw1
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import java.util.*
 import kotlin.random.Random.Default.nextInt
 
 class GameActivity : AppCompatActivity() {
+    //Global variables
+    var equationGenerated1 = generateRandEquation()
+    var equationGenerated2 = generateRandEquation()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -15,16 +20,75 @@ class GameActivity : AppCompatActivity() {
 
         val equation1TextView = findViewById<TextView>(R.id.equation1)
         val equation2TextView = findViewById<TextView>(R.id.equation2)
+        val isGreaterBtn = findViewById<Button>(R.id.isGreaterBtn)
+        val isLesserBtn = findViewById<Button>(R.id.isLesserBtn)
+        val isEqualBtn = findViewById<Button>(R.id.isEqualBtn)
+        val showResultView = findViewById<TextView>(R.id.showResultView)
 
-        val equationGenerated1 = generateRandEquation()
-        val equationGenerated2 = generateRandEquation()
 
+        setEquationAndResult(equation1TextView,equation2TextView)
+
+        isGreaterBtn.setOnClickListener {
+            checkGreater(showResultView)
+            setEquationAndResult(equation1TextView,equation2TextView)
+        }
+        isLesserBtn.setOnClickListener {
+            checkLesser(showResultView)
+            setEquationAndResult(equation1TextView,equation2TextView)
+        }
+        isEqualBtn.setOnClickListener {
+            checkEqual(showResultView)
+            setEquationAndResult(equation1TextView,equation2TextView)
+        }
+
+    }
+    fun setEquationAndResult(equation1TextView:TextView,equation2TextView:TextView){
+        equationGenerated1 = generateRandEquation()
+        equationGenerated2 = generateRandEquation()
+
+        while (equationGenerated1[1].toInt()>100 || equationGenerated2[1].toInt()>100){
+            equationGenerated1= generateRandEquation()
+            equationGenerated2 = generateRandEquation()
+        }
         equation1TextView.text = equationGenerated1[0]+" = "+equationGenerated1[1]
         equation2TextView.text = equationGenerated2[0]+" = "+equationGenerated2[1]
 
     }
 
-    fun generateRandEquation(): List<String>{
+    //Checks if the result of first equation is greater than the second equation.
+    fun checkGreater(showResultView: TextView) {
+        val passResult1 = equationGenerated1[1].toInt()
+        val passResult2 = equationGenerated2[1].toInt()
+        if (passResult1>passResult2){
+            showResultView.text = "Correct"
+        }else{
+            showResultView.text = "Incorrect"
+        }
+
+    }
+    //checks if the result of the first equation is lesser than the second equation
+    fun checkLesser(showResultView: TextView) {
+        val passResult1 = equationGenerated1[1].toInt()
+        val passResult2 = equationGenerated2[1].toInt()
+        if (passResult1<passResult2){
+            showResultView.text = "Correct"
+        }else{
+            showResultView.text = "Incorrect"
+        }
+    }
+    //Checks if the result of both equations are equal
+    fun checkEqual(showResultView: TextView) {
+        val passResult1 = equationGenerated1[1].toInt()
+        val passResult2 = equationGenerated2[1].toInt()
+        if (passResult1==passResult2){
+            showResultView.text = "Correct"
+        }else{
+            showResultView.text = "Incorrect"
+        }
+    }
+
+
+    fun generateRandEquation(): MutableList<String>{
 
         //generate Random numbers
         val randGenTerms = mutableListOf<Int>()
@@ -46,19 +110,18 @@ class GameActivity : AppCompatActivity() {
         Log.d("Operator list",randGenOper.toString())
         Log.d("operator size",randGenOper.size.toString())
 
-        //Check if denominator is factor of numerator
-//        checkIfDenominatorFactorOfNumerator(randGenTerms,randGenOper)
         //Duplicate List
         var duplicateRandGenTerms = mutableListOf<Int>()
         var duplicateRandGenOper = mutableListOf<String>()
 
         duplicateRandGenTerms.addAll(randGenTerms)
         duplicateRandGenOper.addAll(randGenOper)
-        //Calculates the equation
-        val equationResult = doesArithmetics(duplicateRandGenTerms,duplicateRandGenOper)
 
-        Log.d("Check if correct", duplicateRandGenTerms.toString() )
-        Log.d("Check if correct", randGenTerms.toString())
+        //Calculates the equation
+        val equationResult = doesArithmetics(duplicateRandGenTerms,duplicateRandGenOper,randGenTerms)
+
+        Log.d("Check if correct", "Duplicate terms: "+duplicateRandGenTerms.toString())
+        Log.d("Check if correct ","original terms: "+randGenTerms.toString())
         //produce equation
         var equationProduced:String=""
         when (randGenTerms.size){
@@ -69,36 +132,46 @@ class GameActivity : AppCompatActivity() {
                 Log.d("Something", "Stopped working ")
             }
         }
-        val tranferItems = listOf<String>(equationProduced,equationResult)
-        return tranferItems;
+        var transferItems = mutableListOf(equationProduced,equationResult)
+        return transferItems;
     }
-    fun doesArithmetics(randGenTerms:MutableList<Int>, randGenOp:MutableList<String>):String {
+    fun doesArithmetics(randGenTerms:MutableList<Int>, randGenOp:MutableList<String>, originalRandGenTerms: MutableList<Int>):String {
         for(i in 0 until randGenOp.size){
             Log.d("Arithmetic", "Count:"+i.toString())
             Log.d("doesArithmeticsFunction","Enter loop in does arithmetic function")
             if (randGenOp[i] == "/"){
+                Log.d("Enter","Comes to point 1 division")
+                //Checks if denominator is a factor of the numerator
+                while(randGenTerms[0]%randGenTerms[1] !=0){
+                    randGenTerms[1]=(1..20).random()
+                }
+                Log.d("randGenTerm", "randgenTermCangedTo"+randGenTerms[1])
+                originalRandGenTerms[i+1]= randGenTerms[1]
                 randGenTerms[0] = randGenTerms[0] / randGenTerms[1]
                 Log.d("output value of index 0", randGenTerms[0].toString())
-                Log.d("Enter","Comes to point 1 division")
                 pushUnwantedToRight(randGenTerms)
+                randGenTerms.removeLast()
                 Log.d("Value after function",randGenTerms.toString())
             }else if (randGenOp[i] == "*"){
+                Log.d("Enter","Comes to point 1 Multiplication")
                 randGenTerms[0] = randGenTerms[0] * randGenTerms[1]
                 Log.d("output value of index 0", randGenTerms[0].toString())
-                Log.d("Enter","Comes to point 1 Multiplication")
                 pushUnwantedToRight(randGenTerms)
+                randGenTerms.removeLast()
                 Log.d("Value after function",randGenTerms.toString())
             }else if(randGenOp[i] == "+"){
+                Log.d("Enter","Comes to point 1 Addition")
                 randGenTerms[0] = randGenTerms[0] + randGenTerms[1]
                 Log.d("output value of index 0", randGenTerms[0].toString())
-                Log.d("Enter","Comes to point 1 Addition")
                 pushUnwantedToRight(randGenTerms)
+                randGenTerms.removeLast()
                 Log.d("Value after function",randGenTerms.toString())
             }else if (randGenOp[i] == "-"){
+                Log.d("Enter","Comes to point 1 Subtraction")
                 randGenTerms[0] = randGenTerms[0] - randGenTerms[1]
                 Log.d("output value of index 0", randGenTerms[0].toString())
-                Log.d("Enter","Comes to point 1 Subtraction")
                 pushUnwantedToRight(randGenTerms)
+                randGenTerms.removeLast()
                 Log.d("Value after function",randGenTerms.toString())
             }else{
                 Log.d("error","Operator not recognized")
@@ -116,15 +189,7 @@ class GameActivity : AppCompatActivity() {
             randGenTerms[i] = randGenTerms[i+1]
             randGenTerms[i+1]=temp
         }
-        Log.d("Error","Comes to point 2")
+        Log.d("Left For loop","Left Loop at function pushUnwantedToRight")
     }
-//    fun checkIfDenominatorFactorOfNumerator(randGenTerms: MutableList<Int>, randGenOp: MutableList<String>){
-//        for (i in 0 until randGenOp.size ){
-//            if (randGenOp[i] == "/"){
-//                while(randGenTerms[i]%randGenTerms[i+1] !=0){
-//                    randGenTerms[i+1]=(1..20).random()
-//                }
-//            }
-//        }
-//    }
+
 }
