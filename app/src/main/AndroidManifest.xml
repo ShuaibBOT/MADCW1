@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MADCW1">
         <activity
+            android:name=".ResultShow"
+            android:exported="false" />
+        <activity
             android:name=".AboutPage"
             android:exported="false" />
         <activity

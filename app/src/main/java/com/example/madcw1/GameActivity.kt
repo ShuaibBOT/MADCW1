@@ -1,7 +1,9 @@
 package com.example.madcw1
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
@@ -12,6 +14,8 @@ class GameActivity : AppCompatActivity() {
     //Global variables
     var equationGenerated1 = generateRandEquation()
     var equationGenerated2 = generateRandEquation()
+    var correctCount = 0
+    var incorrectCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,9 +28,24 @@ class GameActivity : AppCompatActivity() {
         val isLesserBtn = findViewById<Button>(R.id.isLesserBtn)
         val isEqualBtn = findViewById<Button>(R.id.isEqualBtn)
         val showResultView = findViewById<TextView>(R.id.showResultView)
+        val countDownView = findViewById<TextView>(R.id.countDownView)
 
 
         setEquationAndResult(equation1TextView,equation2TextView)
+        //Count Down Timer
+        object : CountDownTimer(10000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                countDownView.setText("Seconds remaining: \n" + millisUntilFinished / 1000)
+
+            }
+
+            override fun onFinish() {
+                countDownView.setText("done!")
+                //call for  result activity
+                callResultShowActivity()
+            }
+        }.start()
 
         isGreaterBtn.setOnClickListener {
             checkGreater(showResultView)
@@ -61,8 +80,12 @@ class GameActivity : AppCompatActivity() {
         val passResult2 = equationGenerated2[1].toInt()
         if (passResult1>passResult2){
             showResultView.text = "Correct"
+            correctCount++
+
+
         }else{
             showResultView.text = "Incorrect"
+            incorrectCount++
         }
 
     }
@@ -72,8 +95,10 @@ class GameActivity : AppCompatActivity() {
         val passResult2 = equationGenerated2[1].toInt()
         if (passResult1<passResult2){
             showResultView.text = "Correct"
+            correctCount++
         }else{
             showResultView.text = "Incorrect"
+            incorrectCount++
         }
     }
     //Checks if the result of both equations are equal
@@ -82,8 +107,10 @@ class GameActivity : AppCompatActivity() {
         val passResult2 = equationGenerated2[1].toInt()
         if (passResult1==passResult2){
             showResultView.text = "Correct"
+            correctCount++
         }else{
             showResultView.text = "Incorrect"
+            incorrectCount++
         }
     }
 
@@ -190,6 +217,14 @@ class GameActivity : AppCompatActivity() {
             randGenTerms[i+1]=temp
         }
         Log.d("Left For loop","Left Loop at function pushUnwantedToRight")
+    }
+    fun callResultShowActivity(){
+        val resultShowIntent= Intent(this,ResultShow::class.java)
+        val totalCount= correctCount+incorrectCount
+        resultShowIntent.putExtra("Correct_Answer",correctCount)
+        resultShowIntent.putExtra("Incorrect_Answer",incorrectCount)
+        resultShowIntent.putExtra("Total_Answer",totalCount)
+        startActivity(resultShowIntent)
     }
 
 }
