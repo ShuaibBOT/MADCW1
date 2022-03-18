@@ -16,6 +16,11 @@ class GameActivity : AppCompatActivity() {
     var equationGenerated2 = generateRandEquation()
     var correctCount = 0
     var incorrectCount = 0
+    var correctCount5=0
+    var got5Correct = false
+    var millisLeft: Long= 50000
+    val countDownTime: Long = 50000
+    var countDownTime1: Long = countDownTime
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +38,15 @@ class GameActivity : AppCompatActivity() {
 
         setEquationAndResult(equation1TextView,equation2TextView)
         //Count Down Timer
-        object : CountDownTimer(10000, 1000) {
+        object : CountDownTimer(countDownTime, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 countDownView.setText("Seconds remaining: \n" + millisUntilFinished / 1000)
+                millisLeft -= 1000
 
+                while(got5Correct == true){
+                    countDownTime1=10000+millisLeft
+                }
             }
 
             override fun onFinish() {
@@ -81,8 +90,11 @@ class GameActivity : AppCompatActivity() {
         if (passResult1>passResult2){
             showResultView.text = "Correct"
             correctCount++
-
-
+            correctCount5++
+            if(correctCount5 == 5){
+                got5Correct= true
+                correctCount5=0
+            }
         }else{
             showResultView.text = "Incorrect"
             incorrectCount++
@@ -96,6 +108,11 @@ class GameActivity : AppCompatActivity() {
         if (passResult1<passResult2){
             showResultView.text = "Correct"
             correctCount++
+            correctCount5++
+            if(correctCount5 == 5){
+                got5Correct= true
+                correctCount5=0
+            }
         }else{
             showResultView.text = "Incorrect"
             incorrectCount++
@@ -108,6 +125,11 @@ class GameActivity : AppCompatActivity() {
         if (passResult1==passResult2){
             showResultView.text = "Correct"
             correctCount++
+            correctCount5++
+            if(correctCount5 == 5){
+                got5Correct= true
+                correctCount5=0
+            }
         }else{
             showResultView.text = "Incorrect"
             incorrectCount++
