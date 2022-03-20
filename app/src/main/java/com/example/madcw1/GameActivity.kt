@@ -1,6 +1,7 @@
 package com.example.madcw1
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -18,9 +19,7 @@ class GameActivity : AppCompatActivity() {
     var incorrectCount = 0
     var correctCount5=0
     var got5Correct = false
-    var millisLeft: Long= 50000
     val countDownTime: Long = 50000
-    var countDownTime1: Long = countDownTime
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,16 +36,12 @@ class GameActivity : AppCompatActivity() {
 
 
         setEquationAndResult(equation1TextView,equation2TextView)
+
         //Count Down Timer
         object : CountDownTimer(countDownTime, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 countDownView.setText("Seconds remaining: \n" + millisUntilFinished / 1000)
-                millisLeft -= 1000
-
-                while(got5Correct == true){
-                    countDownTime1=10000+millisLeft
-                }
             }
 
             override fun onFinish() {
@@ -89,6 +84,7 @@ class GameActivity : AppCompatActivity() {
         val passResult2 = equationGenerated2[1].toInt()
         if (passResult1>passResult2){
             showResultView.text = "Correct"
+            showResultView.setTextColor(Color.parseColor("#00FF00"))
             correctCount++
             correctCount5++
             if(correctCount5 == 5){
@@ -97,6 +93,7 @@ class GameActivity : AppCompatActivity() {
             }
         }else{
             showResultView.text = "Incorrect"
+            showResultView.setTextColor(Color.parseColor("#FF0000"))
             incorrectCount++
         }
 
@@ -107,6 +104,7 @@ class GameActivity : AppCompatActivity() {
         val passResult2 = equationGenerated2[1].toInt()
         if (passResult1<passResult2){
             showResultView.text = "Correct"
+            showResultView.setTextColor(Color.parseColor("#00FF00"))
             correctCount++
             correctCount5++
             if(correctCount5 == 5){
@@ -115,6 +113,7 @@ class GameActivity : AppCompatActivity() {
             }
         }else{
             showResultView.text = "Incorrect"
+            showResultView.setTextColor(Color.parseColor("#FF0000"))
             incorrectCount++
         }
     }
@@ -124,6 +123,7 @@ class GameActivity : AppCompatActivity() {
         val passResult2 = equationGenerated2[1].toInt()
         if (passResult1==passResult2){
             showResultView.text = "Correct"
+            showResultView.setTextColor(Color.parseColor("#00FF00"))
             correctCount++
             correctCount5++
             if(correctCount5 == 5){
@@ -132,6 +132,7 @@ class GameActivity : AppCompatActivity() {
             }
         }else{
             showResultView.text = "Incorrect"
+            showResultView.setTextColor(Color.parseColor("#FF0000"))
             incorrectCount++
         }
     }
