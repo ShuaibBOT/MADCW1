@@ -20,10 +20,26 @@ class GameActivity : AppCompatActivity() {
     var correctCount5=0
     var got5Correct = false
     val countDownTime: Long = 50000
+    var timeLeft: Long = 5000
+
+    //key to read, for orientation change
+    val CORRECT_COUNT: String = "CORRECT_COUNT"
+    val INCORRECT_COUNT: String = "INCORRECT_COUNT"
+    val CORRECT_COUNT_5: String ="CORRECT_COUNT_5"
+    val TIME_LEFT:String ="TIME_LEFT"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+
+        if(savedInstanceState != null){
+            correctCount = savedInstanceState.getInt(CORRECT_COUNT)
+            incorrectCount = savedInstanceState.getInt(INCORRECT_COUNT)
+            correctCount5 = savedInstanceState.getInt(CORRECT_COUNT_5)
+            timeLeft= savedInstanceState.getLong(TIME_LEFT)
+
+            
+        }
 
 
         val equation1TextView = findViewById<TextView>(R.id.equation1)
@@ -42,6 +58,7 @@ class GameActivity : AppCompatActivity() {
 
             override fun onTick(millisUntilFinished: Long) {
                 countDownView.setText("Seconds remaining: \n" + millisUntilFinished / 1000)
+                timeLeft-= 1000
             }
 
             override fun onFinish() {
@@ -63,6 +80,16 @@ class GameActivity : AppCompatActivity() {
             checkEqual(showResultView)
             setEquationAndResult(equation1TextView,equation2TextView)
         }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(CORRECT_COUNT,correctCount)
+        outState.putInt(CORRECT_COUNT_5,correctCount5)
+        outState.putInt(INCORRECT_COUNT,incorrectCount)
+        outState.putLong(TIME_LEFT,timeLeft)
 
     }
     fun setEquationAndResult(equation1TextView:TextView,equation2TextView:TextView){
