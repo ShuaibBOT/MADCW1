@@ -19,8 +19,9 @@ class GameActivity : AppCompatActivity() {
     var incorrectCount = 0
     var correctCount5=0
     var got5Correct = false
-    val countDownTime: Long = 50000
-    var timeLeft: Long = 5000
+    val countDownTime: Long = 10000
+    var timeLeft: Long = 0
+    var stopTimer = false
 
     //key to read, for orientation change
     val CORRECT_COUNT: String = "CORRECT_COUNT"
@@ -54,11 +55,14 @@ class GameActivity : AppCompatActivity() {
         setEquationAndResult(equation1TextView,equation2TextView)
 
         //Count Down Timer
-        object : CountDownTimer(countDownTime, 1000) {
+        object : CountDownTimer(countDownTime-timeLeft, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 countDownView.setText("Seconds remaining: \n" + millisUntilFinished / 1000)
-                timeLeft-= 1000
+                timeLeft+= 1000
+                while(stopTimer){
+                    super.cancel()
+                }
             }
 
             override fun onFinish() {
@@ -86,6 +90,7 @@ class GameActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
+        stopTimer= true
         outState.putInt(CORRECT_COUNT,correctCount)
         outState.putInt(CORRECT_COUNT_5,correctCount5)
         outState.putInt(INCORRECT_COUNT,incorrectCount)
