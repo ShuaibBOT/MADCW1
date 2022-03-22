@@ -111,8 +111,8 @@ class GameActivity : AppCompatActivity() {
             equationGenerated1= generateRandEquation()
             equationGenerated2 = generateRandEquation()
         }
-        equation1TextView.text = equationGenerated1[0]+" = "+equationGenerated1[1]
-        equation2TextView.text = equationGenerated2[0]+" = "+equationGenerated2[1]
+        equation1TextView.text = equationGenerated1[0]
+        equation2TextView.text = equationGenerated2[0]
 
         Log.d("Answer1:",equationGenerated1[0]+" = "+equationGenerated1[1])
         Log.d("Answer2:",equationGenerated2[0]+" = "+equationGenerated2[1])
