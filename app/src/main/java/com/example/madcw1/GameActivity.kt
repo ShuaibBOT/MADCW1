@@ -45,12 +45,14 @@ class GameActivity : AppCompatActivity() {
             storeOnce=false
         }
 
-
+        // text view of both equation
         val equation1TextView = findViewById<TextView>(R.id.equation1)
         val equation2TextView = findViewById<TextView>(R.id.equation2)
+        //Greater , equal and leser buttons
         val isGreaterBtn = findViewById<Button>(R.id.isGreaterBtn)
         val isLesserBtn = findViewById<Button>(R.id.isLesserBtn)
         val isEqualBtn = findViewById<Button>(R.id.isEqualBtn)
+        //
         val showResultView = findViewById<TextView>(R.id.showResultView)
         val countDownView = findViewById<TextView>(R.id.countDownView)
 
@@ -93,6 +95,7 @@ class GameActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        //assigns stopTimer to true to close initial count down timer
         stopTimer=true
         outState.putInt(CORRECT_COUNT,correctCount)
         outState.putInt(CORRECT_COUNT_5,correctCount5)
@@ -111,6 +114,8 @@ class GameActivity : AppCompatActivity() {
         equation1TextView.text = equationGenerated1[0]+" = "+equationGenerated1[1]
         equation2TextView.text = equationGenerated2[0]+" = "+equationGenerated2[1]
 
+        Log.d("Answer1:",equationGenerated1[0]+" = "+equationGenerated1[1])
+        Log.d("Answer2:",equationGenerated2[0]+" = "+equationGenerated2[1])
     }
 
     //Checks if the result of first equation is greater than the second equation.
@@ -222,69 +227,71 @@ class GameActivity : AppCompatActivity() {
     }
     fun doesArithmetics(randGenTerms:MutableList<Int>, randGenOp:MutableList<String>, originalRandGenTerms: MutableList<Int>):String {
         for(i in 0 until randGenOp.size){
-            Log.d("Arithmetic", "Count:"+i.toString())
-            Log.d("doesArithmeticsFunction","Enter loop in does arithmetic function")
+//            Log.d("Arithmetic", "Count:"+i.toString())
+//            Log.d("doesArithmeticsFunction","Enter loop in does arithmetic function")
             if (randGenOp[i] == "/"){
-                Log.d("Enter","Comes to point 1 division")
+//                Log.d("Enter","Comes to point 1 division")
                 //Checks if denominator is a factor of the numerator
                 while(randGenTerms[0]%randGenTerms[1] !=0){
                     randGenTerms[1]=(1..20).random()
                 }
-                Log.d("randGenTerm", "randgenTermCangedTo"+randGenTerms[1])
+//                Log.d("randGenTerm", "randgenTermCangedTo"+randGenTerms[1])
                 originalRandGenTerms[i+1]= randGenTerms[1]
                 randGenTerms[0] = randGenTerms[0] / randGenTerms[1]
-                Log.d("output value of index 0", randGenTerms[0].toString())
+//                Log.d("output value of index 0", randGenTerms[0].toString())
                 pushUnwantedToRight(randGenTerms)
                 randGenTerms.removeLast()
-                Log.d("Value after function",randGenTerms.toString())
+//                Log.d("Value after function",randGenTerms.toString())
             }else if (randGenOp[i] == "*"){
-                Log.d("Enter","Comes to point 1 Multiplication")
+//                Log.d("Enter","Comes to point 1 Multiplication")
                 randGenTerms[0] = randGenTerms[0] * randGenTerms[1]
-                Log.d("output value of index 0", randGenTerms[0].toString())
+//                Log.d("output value of index 0", randGenTerms[0].toString())
                 pushUnwantedToRight(randGenTerms)
                 randGenTerms.removeLast()
-                Log.d("Value after function",randGenTerms.toString())
+//                Log.d("Value after function",randGenTerms.toString())
             }else if(randGenOp[i] == "+"){
-                Log.d("Enter","Comes to point 1 Addition")
+//                Log.d("Enter","Comes to point 1 Addition")
                 randGenTerms[0] = randGenTerms[0] + randGenTerms[1]
-                Log.d("output value of index 0", randGenTerms[0].toString())
+//                Log.d("output value of index 0", randGenTerms[0].toString())
                 pushUnwantedToRight(randGenTerms)
                 randGenTerms.removeLast()
-                Log.d("Value after function",randGenTerms.toString())
+//                Log.d("Value after function",randGenTerms.toString())
             }else if (randGenOp[i] == "-"){
-                Log.d("Enter","Comes to point 1 Subtraction")
+//                Log.d("Enter","Comes to point 1 Subtraction")
                 randGenTerms[0] = randGenTerms[0] - randGenTerms[1]
-                Log.d("output value of index 0", randGenTerms[0].toString())
+//                Log.d("output value of index 0", randGenTerms[0].toString())
                 pushUnwantedToRight(randGenTerms)
                 randGenTerms.removeLast()
-                Log.d("Value after function",randGenTerms.toString())
+//                Log.d("Value after function",randGenTerms.toString())
             }else{
-                Log.d("error","Operator not recognized")
+//                Log.d("error","Operator not recognized")
             }
         }
         var equationResult = randGenTerms[0]
-        Log.d("AfterArithmetics", randGenTerms.toString())
+//        Log.d("AfterArithmetics", randGenTerms.toString())
         return equationResult.toString()
     }
+    //this function re-allocates the values in the List such that the unwanted value is pushed to the right and then removed.
     fun pushUnwantedToRight( randGenTerms: MutableList<Int>){
         Log.d("Size of randGenTerms", randGenTerms.size.toString())
         for(i in 1 until randGenTerms.size-1){
-            Log.d("error","loop "+i.toString())
+//            Log.d("error","loop "+i.toString())
             var temp = randGenTerms[i]
             randGenTerms[i] = randGenTerms[i+1]
             randGenTerms[i+1]=temp
         }
-        Log.d("Left For loop","Left Loop at function pushUnwantedToRight")
+//        Log.d("Left For loop","Left Loop at function pushUnwantedToRight")
     }
+    //
     fun callResultShowActivity(){
         val resultShowIntent= Intent(this,ResultShow::class.java)
         val totalCount= correctCount+incorrectCount
         resultShowIntent.putExtra("Correct_Answer",correctCount)
         resultShowIntent.putExtra("Incorrect_Answer",incorrectCount)
         resultShowIntent.putExtra("Total_Answer",totalCount)
-        Log.d("dispay result",correctCount.toString())
-        Log.d("dispay result",incorrectCount.toString())
-        Log.d("dispay result",totalCount.toString())
+//        Log.d("dispay result",correctCount.toString())
+//        Log.d("dispay result",incorrectCount.toString())
+//        Log.d("dispay result",totalCount.toString())
         startActivity(resultShowIntent)
     }
 
