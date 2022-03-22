@@ -20,7 +20,9 @@ class GameActivity : AppCompatActivity() {
     var correctCount5=0
     var got5Correct = false
     val countDownTime: Long = 50000
-    var timeLeft: Long = 5000
+    var timeLeft: Long = 0
+    var stopTimer=false
+
 
     //key to read, for orientation change
     val CORRECT_COUNT: String = "CORRECT_COUNT"
@@ -31,14 +33,16 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
-        if(savedInstanceState != null){
+        var storeOnce = true
+        while(savedInstanceState != null && storeOnce){
             correctCount = savedInstanceState.getInt(CORRECT_COUNT)
             incorrectCount = savedInstanceState.getInt(INCORRECT_COUNT)
             correctCount5 = savedInstanceState.getInt(CORRECT_COUNT_5)
             timeLeft= savedInstanceState.getLong(TIME_LEFT)
-
-            
+            Log.d("orientationChangeCheck","correctCount "+correctCount.toString())
+            Log.d("orientationChangeCheck","incorrectCount "+incorrectCount.toString())
+            Log.d("orientationChangeCheck","timeLeft "+timeLeft.toString())
+            storeOnce=false
         }
 
 
@@ -54,11 +58,15 @@ class GameActivity : AppCompatActivity() {
         setEquationAndResult(equation1TextView,equation2TextView)
 
         //Count Down Timer
-        object : CountDownTimer(countDownTime, 1000) {
+        object : CountDownTimer(countDownTime-timeLeft, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
                 countDownView.setText("Seconds remaining: \n" + millisUntilFinished / 1000)
-                timeLeft-= 1000
+                timeLeft+= 1000
+                while (stopTimer){
+                   super.cancel();
+                    stopTimer= false
+                }
             }
 
             override fun onFinish() {
@@ -85,7 +93,7 @@ class GameActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
+        stopTimer=true
         outState.putInt(CORRECT_COUNT,correctCount)
         outState.putInt(CORRECT_COUNT_5,correctCount5)
         outState.putInt(INCORRECT_COUNT,incorrectCount)
@@ -274,6 +282,9 @@ class GameActivity : AppCompatActivity() {
         resultShowIntent.putExtra("Correct_Answer",correctCount)
         resultShowIntent.putExtra("Incorrect_Answer",incorrectCount)
         resultShowIntent.putExtra("Total_Answer",totalCount)
+        Log.d("dispay result",correctCount.toString())
+        Log.d("dispay result",incorrectCount.toString())
+        Log.d("dispay result",totalCount.toString())
         startActivity(resultShowIntent)
     }
 
